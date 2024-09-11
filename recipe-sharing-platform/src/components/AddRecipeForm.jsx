@@ -4,34 +4,48 @@ const AddRecipeForm = () => {
   const [title, setTitle] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [steps, setSteps] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!title.trim()) {
+      newErrors.title = "Recipe title is required.";
+    }
+
+    if (!ingredients.trim()) {
+      newErrors.ingredients = "Ingredients are required.";
+    } else if (ingredients.split(",").length < 2) {
+      newErrors.ingredients = "Please include at least two ingredients.";
+    }
+
+    if (!steps.trim()) {
+      newErrors.steps = "Preparation steps are required.";
+    }
+
+    return newErrors;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Simple validation
-    if (!title || !ingredients || !steps) {
-      setError("All fields are required.");
-      return;
+    // Perform validation
+    const validationErrors = validate();
+    setErrors(validationErrors);
+
+    // If there are no errors, proceed with form submission
+    if (Object.keys(validationErrors).length === 0) {
+      console.log({
+        title,
+        ingredients: ingredients.split(","),
+        steps: steps.split("."),
+      });
+
+      // Reset the form after submission
+      setTitle("");
+      setIngredients("");
+      setSteps("");
     }
-
-    if (ingredients.split(",").length < 2) {
-      setError("Please include at least two ingredients.");
-      return;
-    }
-
-    // If validation passes
-    setError("");
-    console.log({
-      title,
-      ingredients: ingredients.split(","),
-      steps: steps.split("."),
-    });
-
-    // Reset the form
-    setTitle("");
-    setIngredients("");
-    setSteps("");
   };
 
   return (
@@ -39,7 +53,6 @@ const AddRecipeForm = () => {
       <h1 className="text-3xl font-bold text-center mb-6">
         Submit a New Recipe
       </h1>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-lg p-6"
@@ -56,10 +69,16 @@ const AddRecipeForm = () => {
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+              errors.title ? "border-red-500" : ""
+            }`}
             placeholder="Enter recipe title"
           />
+          {errors.title && (
+            <p className="text-red-500 text-xs italic mt-2">{errors.title}</p>
+          )}
         </div>
+
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -71,10 +90,18 @@ const AddRecipeForm = () => {
             id="ingredients"
             value={ingredients}
             onChange={(e) => setIngredients(e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+              errors.ingredients ? "border-red-500" : ""
+            }`}
             placeholder="Enter ingredients, separated by commas"
           />
+          {errors.ingredients && (
+            <p className="text-red-500 text-xs italic mt-2">
+              {errors.ingredients}
+            </p>
+          )}
         </div>
+
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -86,10 +113,16 @@ const AddRecipeForm = () => {
             id="steps"
             value={steps}
             onChange={(e) => setSteps(e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+              errors.steps ? "border-red-500" : ""
+            }`}
             placeholder="Enter preparation steps, separated by periods"
           />
+          {errors.steps && (
+            <p className="text-red-500 text-xs italic mt-2">{errors.steps}</p>
+          )}
         </div>
+
         <button
           type="submit"
           className="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-blue-600"
