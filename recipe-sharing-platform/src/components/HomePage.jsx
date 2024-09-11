@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import data from "../data.json";
 
 const HomePage = () => {
@@ -14,8 +15,9 @@ const HomePage = () => {
       <h1 className="text-3xl font-bold text-center mb-6">Recipe List</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {recipes.map((recipe) => (
-          <div
+          <Link
             key={recipe.id}
+            to={`/recipe/${recipe.id}`}
             className="bg-white shadow-lg rounded-lg overflow-hidden"
           >
             <img
@@ -30,7 +32,7 @@ const HomePage = () => {
                 View Recipe
               </button>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
