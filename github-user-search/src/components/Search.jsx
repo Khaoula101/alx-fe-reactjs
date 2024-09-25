@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { fetchUserData } from "../services/githubService";
 
 function Search() {
   const [username, setUsername] = useState("");
@@ -14,17 +14,17 @@ function Search() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setUserData(null);
+    setError(""); // Reset error state
+    setUserData(null); // Clear previous results
 
     try {
       const response = await fetchUserData(username);
-      setUserData(response.data);
+      setUserData(response.data); // Store user data on success
     } catch (err) {
-      setError("Looks like we can’t find the user");
+      setError("Looks like we can’t find the user"); // Set error message if the API call fails
     }
 
-    setLoading(false);
+    setLoading(false); // Stop loading state
   };
 
   return (
@@ -45,7 +45,7 @@ function Search() {
       {userData && (
         <div>
           <img src={userData.avatar_url} alt={userData.login} width="100" />
-          <p>{userData.name}</p>
+          <p>{userData.name || userData.login}</p>
           <a href={userData.html_url} target="_blank" rel="noreferrer">
             View Profile
           </a>
