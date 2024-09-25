@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fetchAdvancedUserData } from "../services/githubService";
+import { fetchUserData } from "../services/githubService";
 
 function Search() {
   const [username, setUsername] = useState("");
@@ -17,7 +17,7 @@ function Search() {
 
     try {
       const query = { username, location, minRepos };
-      const response = await fetchAdvancedUserData(query);
+      const response = await fetchUserData(query);
       setUsers(response.data.items); // Advanced search returns multiple users
     } catch (err) {
       setError(err);
