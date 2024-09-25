@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { fetchUserData } from "../services/githubService";
 
 function Search() {
@@ -21,7 +21,7 @@ function Search() {
       const response = await fetchUserData(username);
       setUserData(response.data); // Store user data on success
     } catch (err) {
-      setError("Looks like we can’t find the user"); // Set error message if the API call fails
+      setError(err); // Set error message if the API call fails
     }
 
     setLoading(false); // Stop loading state
@@ -41,7 +41,7 @@ function Search() {
       </form>
 
       {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+      {error && <p>Looks like we can’t find the user</p>}
       {userData && (
         <div>
           <img src={userData.avatar_url} alt={userData.login} width="100" />
